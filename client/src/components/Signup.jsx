@@ -1,29 +1,60 @@
 import React, { useState, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Modal from 'react-modal'
 import '../App.css';
 
 export default function Signup() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:4000/adduser', {
-                username,
-                password,
-            });
-            console.log('user added', response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+          const response = await axios.post('http://localhost:4000/adduser', {
+              email,
+              username,
+              password,
+          });
+          console.log('user added', response.data);
+          setMessage(`Welcome ${response.data.username}, you may login now.`);
+          setMessageType('success');
+
+      } catch (error) {
+          console.error(error);
+          if (error.response) {
+            setMessage(error.response.data.error);
+          } else {
+              setMessage('An error occurred');
+          }
+          setMessageType('error');
+      }
+  }
 
   return (
     <Fragment>
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <span className="signup-input-span">
-            <label for="username" className="signup-label">Username</label>
+      <form className="form" onSubmit={handleSubmit}>
+        {message && (
+            <div className={`message ${messageType}`}>
+                {message}
+            </div>
+        )}
+        <span className="input-span">
+            <label for="email" className="label">Email</label>
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                name="email"
+                id="email"
+                />
+        </span>
+        <span className="input-span">
+            <label for="username" className="label">Username</label>
             <input
                 type="username"
                 value={username}
@@ -33,8 +64,8 @@ export default function Signup() {
                 id="username"
                 />
         </span>
-        <span className="signup-input-span">
-          <label for="password" className="signup-label" >Password</label>
+        <span className="input-span">
+          <label for="password" className="label" >Password</label>
           <input
             type="password"
             value={password}
@@ -44,8 +75,8 @@ export default function Signup() {
             id="password"
             />
         </span>
-        <input className="signup-submit" type="submit" value="Sign up"></input>
-        <span className="signup-span">Already have an account? <a href="#">Log in</a></span>
+        <input className="submit" type="submit" value="Sign up"></input>
+        <span className="span">Already have an account? <Link to="/" className="link">Log in</Link></span>
       </form>
     </Fragment>
   )

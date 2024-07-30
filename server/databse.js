@@ -9,15 +9,16 @@ const pool = new Pool({
     
 })
 // code to add a new table to the database
-// const createTblQry = `CREATE TABLE accounts (
-//     user_id serial PRIMARY KEY,
-//     username VARCHAR ( 50 ) UNIQUE NOT NULL,
-//     password VARCHAR ( 50 ) UNIQUE NOT NULL);`;
+// const adjust = `
+// ALTER TABLE accounts DROP CONSTRAINT IF EXISTS accounts_username_key;
+
+// ALTER TABLE accounts DROP CONSTRAINT IF EXISTS accounts_password_key;
+// `;
 
 // pool
-//     .query(createTblQry)
+//     .query(adjust)
 //     .then((Response) => {
-//     console.log("table created")
+//     console.log("adjusted")
 //     console.log(Response)
 // })
 // .catch((err) => {
